@@ -12,7 +12,7 @@ async function bootstrap() {
   console.log('add ', add(3, 4))
 
   const config = new DocumentBuilder()
-    .setTitle('FoundationX | Naveed Waddo')
+    .setTitle('SupplyChainX | Naveed Waddo')
     .setDescription(
       `Looking for the graphql api?
       <br/>
