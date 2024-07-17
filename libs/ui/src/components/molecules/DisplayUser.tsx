@@ -4,7 +4,7 @@ import { cn } from '../../util'
 
 export const DisplayUser = async ({
   rounded = 'full',
-  size = 'sm' ,
+  size = 'sm',
 }: {
   rounded?: 'full' | 'lg'
   size?: 'sm' | 'lg'
