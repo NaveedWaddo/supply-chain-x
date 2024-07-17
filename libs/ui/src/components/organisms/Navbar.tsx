@@ -3,7 +3,7 @@ import { Brand } from '../atoms/brand'
 import { SheetClose, SheetFooter, SheetHeader } from '../atoms/sheet'
 import { DisplayUser } from '../molecules/DisplayUser'
 
-import { Factory, LibrarySquare, Store, Warehouse } from 'lucide-react'
+import { Factory, Store, Warehouse } from 'lucide-react'
 import { Sidebar } from './Sidebar'
 
 export const Navbar = () => {
@@ -23,13 +23,11 @@ export const Navbar = () => {
                   <Factory className="w-4 h-4" /> Manufacturer
                 </div>
               </Link>
-
               <Link href="/distributor">
                 <div className="flex items-center gap-2">
                   <Warehouse className="w-4 h-4" /> Distributor
                 </div>
               </Link>
-
               <Link href="/retailer">
                 <div className="flex items-center gap-2">
                   <Store className="w-4 h-4" /> Retailer

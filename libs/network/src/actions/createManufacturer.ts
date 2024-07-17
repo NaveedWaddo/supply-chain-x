@@ -3,7 +3,7 @@
 import { revalidateTag } from 'next/cache'
 import { fetchGraphQLServer } from '../fetch/server'
 import {
-  CreateManufacturerDocument,
+  CreateManufacturerDocument1,
   namedOperations,
 } from '../queries/generated'
 
