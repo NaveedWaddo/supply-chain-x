@@ -5,9 +5,9 @@ import {
   namedOperations,
 } from '@foundation/network/src/queries/generated'
 import Link from 'next/link'
-import { WarehouseCard } from '@foundation/ui/src/components/organisms/WarehouseCard'
+import { WarehouseDetails } from '@foundation/ui/src/components/organisms/WarehouseDetails'
 
-export default async function DistributorWarehousesPage() {
+export default async function WarehousesPage() {
   const { data, error } = await fetchGraphQLServer({
     document: MyWarehousesDocument,
     variables: { orderBy: { createdAt: SortOrder.Desc } },
@@ -17,6 +17,7 @@ export default async function DistributorWarehousesPage() {
       },
     },
   })
+
   return (
     <div>
       <div className="flex justify-between mb-6">
@@ -25,16 +26,14 @@ export default async function DistributorWarehousesPage() {
       </div>
       {data?.myWarehouses.length === 0 ? <div>No warehouses found.</div> : null}
 
-      <div className="grid grid-cols-3 gap-3">
-        {data?.myWarehouses.map((warehouse) => (
-          <Link
-            href={`/distributor/warehouses/${warehouse.id}`}
-            key={warehouse.id}
-          >
-            <WarehouseCard warehouse={warehouse} />
-          </Link>
-        ))}
-      </div>
+      {data?.myWarehouses.map((warehouse) => (
+        <Link
+          href={`/distributor/warehouses/${warehouse.id}`}
+          key={warehouse.id}
+        >
+          <WarehouseDetails warehouse={warehouse} />
+        </Link>
+      ))}
     </div>
   )
 }

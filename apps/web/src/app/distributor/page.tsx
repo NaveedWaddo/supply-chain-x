@@ -1,11 +1,11 @@
-import { getAuth } from '@foundation/network/src/auth/authOptions'
-import { fetchGraphQLServer } from '@foundation/network/src/fetch/server'
 import {
   DistributorDocument,
   namedOperations,
 } from '@foundation/network/src/queries/generated'
-import Link from 'next/link'
+import { fetchGraphQLServer } from '@foundation/network/src/fetch/server'
 import { DistributorDashboard } from '@foundation/ui/src/components/templates/DistributorDashboard'
+import { getAuth } from '@foundation/network/src/auth/authOptions'
+import Link from 'next/link'
 
 export default async function DistributorPage() {
   const user = await getAuth()
@@ -29,5 +29,6 @@ export default async function DistributorPage() {
     // This condition should not technically happen as we check this in layout file. But right now there is no way of passing the data fetched in layout to the page.
     return <div>Distributor account not found.</div>
   }
+
   return <DistributorDashboard distributor={data.distributor} />
 }

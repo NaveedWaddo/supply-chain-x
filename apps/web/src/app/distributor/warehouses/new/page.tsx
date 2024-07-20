@@ -1,18 +1,12 @@
 import { getAuth } from '@foundation/network/src/auth/authOptions'
-import { CreateWarehouse } from '@foundation/ui/src/components/templates/CreateWarehouse'
-import { SignInButton } from '@foundation/ui/src/components/molecules/SignInButton'
+import { CreateWarehouse } from '@foundation/ui/src/components/organisms/CreateWarehouse'
 
-export default async function ManufacturerNewWarehousePage() {
-  const session = await getAuth()
-
-  if (!session?.user) {
-    return <SignInButton />
-  }
-
+export default async function WarehousesPage() {
+  const user = await getAuth()
   return (
     <CreateWarehouse
+      warehouseRole={{ distributorId: user?.user?.uid }}
       redirectUrl="/distributor/warehouses"
-      warehouseRole={{ distributorId: session.user.uid }}
     />
   )
 }

@@ -5,10 +5,10 @@ import {
 } from '@foundation/network/src/queries/generated'
 import { Warehouse } from '@foundation/ui/src/components/templates/Warehouse'
 
-export default async function ManufacturerWarehousePage({
+export default async function ProductPage({
   params,
 }: {
-  params: { id: string }
+  params: { id: number }
 }) {
   const { data, error } = await fetchGraphQLServer({
     document: WarehouseDocument,
@@ -25,5 +25,6 @@ export default async function ManufacturerWarehousePage({
   if (!data?.warehouse) {
     return <div>Warehouse not found.</div>
   }
+
   return <Warehouse warehouse={data.warehouse} showUpsertInventory />
 }
