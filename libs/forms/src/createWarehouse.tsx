@@ -1,6 +1,6 @@
 'use client'
 import { zodResolver } from '@hookform/resolvers/zod'
-import React from 'react'
+import { ReactNode } from 'react'
 import { FormProvider, useForm } from 'react-hook-form'
 import { z } from 'zod'
 import { formSchemaCreateWarehouse } from './schemas'
@@ -15,7 +15,7 @@ export const useFormCreateWarehouse = () =>
 export const FormProviderCreateWarehouse = ({
   children,
 }: {
-  children: React.ReactNode
+  children: ReactNode
 }) => {
   const methods = useFormCreateWarehouse()
   return <FormProvider {...methods}>{children}</FormProvider>

@@ -9,7 +9,4 @@ export type FormTypeUpsertInventory = z.infer<typeof formSchemaUpsertInventory>
 export const useFormUpsertInventory = () =>
   useForm<FormTypeUpsertInventory>({
     resolver: zodResolver(formSchemaUpsertInventory),
-    defaultValues: {
-      quantity: 0,
-    },
   })

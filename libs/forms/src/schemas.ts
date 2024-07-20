@@ -19,11 +19,11 @@ export const formSchemaCreateItem = z.object({
 export const addressSchema = z.object({
   latitude: z.number(),
   longitude: z.number(),
-  address: z.string().min(2),
+  address: z.string(),
 })
 
 export const formSchemaCreateWarehouse = z.object({
-  name: z.string().min(2),
+  name: z.string(),
   description: z.string().optional(),
   manufacturerId: z.string().optional(),
   distributorId: z.string().optional(),
@@ -38,20 +38,20 @@ export const formSchemaCreateProduct = z.object({
 })
 
 export const formSchemaUpsertInventory = z.object({
-  productId: z.number(),
-  quantity: z.number().min(1),
   warehouseId: z.number(),
+  productId: z.number(),
+  quantity: z.number(),
 })
 
 export const formSchemaTransferInventory = z.object({
   productId: z.number(),
-  quantity: z.number().min(1),
+  quantity: z.number(),
   fromWarehouseId: z.number(),
   toWarehouseId: z.number(),
 })
 
 export const formSchemaSellInventory = z.object({
   productId: z.number(),
-  quantity: z.number().min(1),
+  quantity: z.number(),
   warehouseId: z.number(),
 })

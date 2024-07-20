@@ -15,13 +15,9 @@ export async function createRetailer({ uid }: { uid: string }) {
       },
     })
 
-    if (data) {
-      revalidateTag(namedOperations.Query.retailer)
-      return data
-    }
-    if (error) {
-      return error
-    }
+    console.log(data, error)
+
+    revalidateTag(namedOperations.Query.retailer)
   } catch (error) {
     throw new Error('Something went wrong')
   }

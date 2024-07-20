@@ -7,7 +7,7 @@ import {
   namedOperations,
 } from '../queries/generated'
 
-export async function createDistributor({ uid }: { uid: string }) {
+export async function createDistributer({ uid }: { uid: string }) {
   try {
     const { data, error } = await fetchGraphQLServer({
       document: CreateDistributorDocument,
@@ -18,13 +18,9 @@ export async function createDistributor({ uid }: { uid: string }) {
       },
     })
 
-    if (data) {
-      revalidateTag(namedOperations.Query.distributor)
-      return data
-    }
-    if (error) {
-      return error
-    }
+    console.log(data, error)
+
+    revalidateTag(namedOperations.Query.distributor)
   } catch (error) {
     throw new Error('Something went wrong')
   }

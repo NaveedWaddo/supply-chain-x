@@ -3,12 +3,12 @@
 import { revalidateTag } from 'next/cache'
 import { fetchGraphQLServer } from '../fetch/server'
 import {
-  CreateManufacturerDocument1,
+  CreateManufacturerDocument,
   namedOperations,
 } from '../queries/generated'
 
 export async function createManufacturer({ uid }: { uid: string }) {
-  const { data } = await fetchGraphQLServer({
+  const { data, error } = await fetchGraphQLServer({
     document: CreateManufacturerDocument,
     variables: {
       createManufacturerInput: { uid },
@@ -16,6 +16,6 @@ export async function createManufacturer({ uid }: { uid: string }) {
   })
 
   if (data?.createManufacturer) {
-    revalidateTag(namedOperations.Query.manufacturer)
+    revalidateTag(namedOperations.Query.Manufacturer)
   }
 }

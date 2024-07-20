@@ -4,18 +4,19 @@ import { formSchemaUpsertInventory } from '@foundation/forms/src/schemas'
 
 import { revalidateTag } from 'next/cache'
 
+import { redirect } from 'next/navigation'
+
 import { fetchGraphQLServer } from '../fetch/server'
 import { getAuth } from '../auth/authOptions'
 import { FormTypeUpsertInventory } from '@foundation/forms/src/upsertInventory'
 import { CreateInventoryDocument, namedOperations } from '../queries/generated'
 
 export async function upsertInventory(formData: FormTypeUpsertInventory) {
+  const result = formSchemaUpsertInventory.safeParse(formData)
   const user = await getAuth()
   if (!user?.user?.uid) {
     throw new Error('You are not logged in.')
   }
-
-  const result = formSchemaUpsertInventory.safeParse(formData)
   if (result.success) {
     const { productId, quantity, warehouseId } = result.data
 
@@ -31,7 +32,7 @@ export async function upsertInventory(formData: FormTypeUpsertInventory) {
     })
 
     if (data?.createInventory) {
-      revalidateTag(namedOperations.Fragment.WarehouseDetails)
+      revalidateTag(namedOperations.Query.myWarehouses)
     }
     if (error) {
       throw new Error('Something went wrong.')

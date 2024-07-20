@@ -11,7 +11,4 @@ export type FormTypeTransferInventory = z.infer<
 export const useFormTransferInventory = () =>
   useForm<FormTypeTransferInventory>({
     resolver: zodResolver(formSchemaTransferInventory),
-    defaultValues: {
-      quantity: 0,
-    },
   })
