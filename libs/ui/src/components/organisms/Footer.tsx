@@ -7,7 +7,7 @@ export const Footer = () => (
   <footer className="py-8 mt-8 text-xs bg-gray-200">
     <Container className="justify-between sm:flex">
       <Link target="_blank" href="https://www.iamkarthick.com" rel="noreferrer">
-        <div className="font-black py-0.5">Karthick Ragavendran</div>
+        <div className="font-black py-0.5">Naveed Waddo</div>
         <div>Portfolio project.</div>
         2023
       </Link>

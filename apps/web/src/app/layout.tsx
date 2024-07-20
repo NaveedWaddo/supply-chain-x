@@ -8,7 +8,7 @@ import { SessionProvider } from '@foundation/ui/src/components/molecules/Session
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
-  title: 'Foundation X | Karthick Ragavendran',
+  title: 'Foundation X | Naveed Waddo',
   description: 'The foundation for your monorepo.',
 }
 
