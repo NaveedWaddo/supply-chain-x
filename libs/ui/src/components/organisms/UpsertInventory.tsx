@@ -9,7 +9,7 @@ import { upsertInventory } from '@foundation/network/src/actions/upsertInventory
 import { Plus } from 'lucide-react'
 import { useState } from 'react'
 import { Button } from '../atoms/button'
-import { SelectProducts } from '../organisms/SelectProducts'
+import { SelectProducts } from '../molecules/SelectProducts'
 import { SimpleDialog } from '../molecules/SimpleDialog'
 
 export const UpsertInventory = ({
@@ -24,13 +24,13 @@ export const UpsertInventory = ({
     formState: { errors },
     reset,
   } = useFormUpsertInventory()
+  console.log('errors ', errors)
 
-  const [open, setOpen] = useState(false)
+  const [close, setClose] = useState(false)
 
   return (
     <SimpleDialog
-      open={open}
-      setOpen={setOpen}
+      close={close}
       buttonText={
         <div className="p-1 bg-black rounded-full shadow-md">
           <Plus className="p-1 text-white " />
@@ -40,15 +40,17 @@ export const UpsertInventory = ({
       {warehouse.name}
       <form
         onSubmit={handleSubmit(async ({ productId, quantity, warehouseId }) => {
+          console.log('data', productId, quantity, warehouseId)
+
           await upsertInventory({ productId, quantity, warehouseId })
-          setOpen(false)
+
           reset()
+          setClose(true)
         })}
-        className="flex flex-col gap-2"
       >
         <Label title="Product" error={errors.productId?.message}>
           <SelectProducts
-            onSelect={(productId) => {
+            onSelect={function (productId: number): void {
               setValue('productId', productId)
             }}
             manufacturerId={warehouse.id}

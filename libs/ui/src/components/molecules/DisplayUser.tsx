@@ -1,14 +1,16 @@
 import { getAuth } from '@foundation/network/src/auth/authOptions'
 import Image from 'next/image'
 import { cn } from '../../util'
+import { BaseComponent } from '@foundation/util/types'
 
 export const DisplayUser = async ({
   rounded = 'full',
   size = 'sm',
+  className,
 }: {
   rounded?: 'full' | 'lg'
   size?: 'sm' | 'lg'
-}) => {
+} & BaseComponent) => {
   const session = await getAuth()
 
   if (!session?.user) {
@@ -19,9 +21,13 @@ export const DisplayUser = async ({
   const sizeCls = size === 'lg' ? 'w-full' : 'w-16'
 
   return (
-    <div>
+    <div className={className}>
       <Image
-        className={cn('aspect-square object-cover', sizeCls, roundedCls)}
+        className={cn(
+          'rounded-full aspect-square object-cover shadow-lg',
+          sizeCls,
+          roundedCls,
+        )}
         width={600}
         height={600}
         src={session?.user?.image || '/no-image.jpeg'}
@@ -31,7 +37,7 @@ export const DisplayUser = async ({
       <div className={`text-xl font-light capitalize mt-2`}>
         {session?.user?.name}
       </div>
-      <div className="mt-1 text-xs text-gray-500">{session?.user?.uid}</div>
+      <div className="text-xs text-gray-500">{session?.user?.uid}</div>
     </div>
   )
 }

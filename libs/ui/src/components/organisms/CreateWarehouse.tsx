@@ -3,26 +3,27 @@ import {
   FormProviderCreateWarehouse,
   FormTypeCreateWarehouse,
 } from '@foundation/forms/src/createWarehouse'
-import { fetchGraphQLClient } from '@foundation/network/src/fetch/client'
 import { useFormContext, useWatch } from '@foundation/forms/src'
 import { Input } from '../atoms/input'
-import { Textarea } from '../atoms/textarea'
-import { Button } from '../atoms/button'
-import { Map, ViewState } from '../organisms/Map/Map'
-import { Marker } from '../organisms/Map/MapMarker'
-import { initialViewState } from '@foundation/util'
-import { LucideIcon, Warehouse } from 'lucide-react'
+
+import { initialViewState } from '@foundation/util/index'
+import { Map } from './Map/Map'
+import { CenterOfMap, DefaultZoomControls } from './Map/ZoomControls'
 import { useEffect } from 'react'
-import { DefaultZoomControls } from '../organisms/Map/ZoomControls'
-import { Panel } from '../organisms/Map/Panel'
+import { Panel } from './Map/Panel'
+import { ViewState } from './Map/Map'
+import { LucideIcon, Warehouse } from 'lucide-react'
+import { Marker } from './Map/MapMarker'
+import { SearchLocation } from '../molecules/SearchLocation'
+
+import { fetchGraphQLClient } from '@foundation/network/src/fetch/client'
 import {
   CreateWarehouseDocument,
   namedOperations,
 } from '@foundation/network/src/queries/generated'
-import { useRouter } from 'next/navigation'
+import { Textarea } from '../atoms/textArea'
 import { revalidate } from '@foundation/network/src/actions/revalidate'
-import { Label } from '../atoms/label'
-import { SearchLocation } from '../organisms/Map/SearchLocation'
+import { useRouter } from 'next/navigation'
 
 interface ICreateWarehouse {
   warehouseRole: {
@@ -36,26 +37,31 @@ interface ICreateWarehouse {
     | '/manufacturer/warehouses'
 }
 
-const CreateWarehouseContent = ({
-  redirectUrl,
+export const CreateWarehouse = ({
   warehouseRole,
+  redirectUrl,
 }: ICreateWarehouse) => {
-  const {
-    register,
-    handleSubmit,
-    watch,
-    formState: { errors },
-    setValue,
-  } = useFormContext<FormTypeCreateWarehouse>()
+  return (
+    <FormProviderCreateWarehouse>
+      <CreateWarehouseContent
+        warehouseRole={warehouseRole}
+        redirectUrl={redirectUrl}
+      />
+    </FormProviderCreateWarehouse>
+  )
+}
+export const CreateWarehouseContent = ({
+  warehouseRole,
+  redirectUrl,
+}: ICreateWarehouse) => {
+  const { register, handleSubmit, reset, setValue } =
+    useFormContext<FormTypeCreateWarehouse>()
 
-  const data = watch()
-  console.log('data ', data, errors)
   const router = useRouter()
   return (
     <div className="grid grid-cols-2 gap-2">
       <form
-        className="flex flex-col gap-2"
-        onSubmit={handleSubmit(async ({ address, name, description }) => {
+        onSubmit={handleSubmit(async ({ name, description, address }) => {
           const { data, error } = await fetchGraphQLClient({
             document: CreateWarehouseDocument,
             variables: {
@@ -67,38 +73,32 @@ const CreateWarehouseContent = ({
               },
             },
           })
-
           if (data) {
             revalidate(namedOperations.Query.myWarehouses)
             router.replace(redirectUrl)
+            reset()
           }
           if (error) {
             alert(error)
           }
         })}
+        className="space-y-2"
       >
-        <Label title="Name" error={errors.name?.message}>
-          <Input {...register('name')} placeholder="Warehouse name" />
-        </Label>
-        <Label title="Description" error={errors.description?.message}>
-          <Textarea
-            {...register('description')}
-            placeholder="Warehouse description"
-          />
-        </Label>
-        <Label title="Address" error={errors.address?.address?.message}>
-          <Textarea
-            {...register('address.address')}
-            placeholder="Warehouse address"
-          />
-        </Label>
-        <Button type="submit">Create warehouse</Button>
+        <h1 className="mb-2 text-lg font-semibold">Create warehouse</h1>{' '}
+        <Input {...register('name')} placeholder="Warehouse name" />
+        <Textarea
+          {...register('description')}
+          placeholder="Warehouse description"
+        />
+        <Textarea
+          {...register('address.address')}
+          placeholder="Warehouse address"
+        />
+        <button type="submit">Create warehouse</button>
       </form>
       <Map initialViewState={initialViewState}>
-        <MapMarker />
-        <Panel position="right-center">
-          <DefaultZoomControls />
-        </Panel>
+        <MapMarker initialLocation={initialViewState} />
+
         <Panel position="left-top">
           <SearchLocation
             onLocationChange={(location: ViewState) => {
@@ -106,6 +106,16 @@ const CreateWarehouseContent = ({
               setValue('address.longitude', location.longitude)
             }}
           />
+          <DefaultZoomControls>
+            <CenterOfMap
+              onClick={(latLng) => {
+                const lat = parseFloat(latLng.lat.toFixed(6))
+                const lng = parseFloat(latLng.lng.toFixed(6))
+                setValue('address.latitude', lat, { shouldValidate: true })
+                setValue('address.longitude', lng, { shouldValidate: true })
+              }}
+            />
+          </DefaultZoomControls>
         </Panel>
       </Map>
     </div>
@@ -113,7 +123,7 @@ const CreateWarehouseContent = ({
 }
 
 export const MapMarker = ({
-  initialLocation = initialViewState,
+  initialLocation,
   Icon = Warehouse,
 }: {
   initialLocation?: ViewState
@@ -137,25 +147,11 @@ export const MapMarker = ({
       draggable
       onDragEnd={({ lngLat }) => {
         const { lat, lng } = lngLat
-        setValue('address.latitude', lat)
-        setValue('address.longitude', lng)
+        setValue('address.latitude', lat || 0)
+        setValue('address.longitude', lng || 0)
       }}
     >
       <Icon className="w-8 h-8 p-1.5" />
     </Marker>
-  )
-}
-
-export const CreateWarehouse = ({
-  redirectUrl,
-  warehouseRole,
-}: ICreateWarehouse) => {
-  return (
-    <FormProviderCreateWarehouse>
-      <CreateWarehouseContent
-        redirectUrl={redirectUrl}
-        warehouseRole={warehouseRole}
-      />
-    </FormProviderCreateWarehouse>
   )
 }

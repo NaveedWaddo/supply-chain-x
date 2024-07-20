@@ -5,8 +5,8 @@ import { buttonVariants } from '../../util/variants'
 
 export const HeroBanner = () => {
   return (
-    <div className="flex h-[calc(100vh-3rem)] ">
-      <div className="mt-32 ">
+    <div className="flex h-screen mt-32 ">
+      <div>
         <h1 className="max-w-xl mb-4 text-5xl">
           Empowering Your <span className="">Supply Chain</span> Journey
         </h1>

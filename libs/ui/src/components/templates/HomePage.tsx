@@ -1,4 +1,4 @@
-import { HeroBanner } from '../organisms/HeroBanner'
+import { HeroBanner } from '../organisms/Hero'
 
 export const HomePage = () => {
   return <HeroBanner />

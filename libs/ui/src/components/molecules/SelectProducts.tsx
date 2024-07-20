@@ -1,4 +1,3 @@
-'use client'
 import { fetchGraphQLClient } from '@foundation/network/src/fetch/client'
 import {
   MyProductsDocument,

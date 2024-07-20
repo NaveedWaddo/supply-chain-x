@@ -7,12 +7,16 @@ export const ManufacturerDashboard = ({ manufacturer }: ManufacturerQuery) => {
       Dashboard
       <div>{manufacturer?.uid}</div>
       <div className="flex gap-2 mt-4">
-        <StatCard title={'Products'} href={'/manufacturer/products'}>
-          {manufacturer?.products.length}
-        </StatCard>
-        <StatCard title={'Warehouses'} href={'/manufacturer/warehouses'}>
-          {manufacturer?.warehouses.length}
-        </StatCard>
+        <StatCard
+          title={'Products'}
+          count={manufacturer?.products.length}
+          href={'/manufacturer/products'}
+        />
+        <StatCard
+          title={'Warehouses'}
+          href={'/manufacturer/warehouses'}
+          count={manufacturer?.warehouses.length}
+        />
       </div>
     </div>
   )

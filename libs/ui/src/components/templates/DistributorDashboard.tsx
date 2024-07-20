@@ -7,9 +7,11 @@ export const DistributorDashboard = ({ distributor }: DistributorQuery) => {
       Dashboard
       <div>{distributor?.uid}</div>
       <div className="flex gap-2 mt-4">
-        <StatCard title={'Warehouses'} href={'/distributor/warehouses'}>
-          {distributor?.warehouses.length}
-        </StatCard>
+        <StatCard
+          title={'Warehouses'}
+          href={'/distributor/warehouses'}
+          count={distributor?.warehouses.length}
+        />
       </div>
     </div>
   )

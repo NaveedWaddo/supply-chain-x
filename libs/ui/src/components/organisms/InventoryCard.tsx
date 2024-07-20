@@ -1,4 +1,4 @@
-import { WarehouseDetailsFragment } from '@foundation/network/src/queries/generated'
+import { MyWarehousesQuery } from '@foundation/network/src/queries/generated'
 import Image from 'next/image'
 import { TransferGoods } from './TransferGoods'
 import { SellGoods } from './SellGoods'
@@ -7,13 +7,13 @@ export const InventoryCard = ({
   inventory,
   warehouseId,
 }: {
-  inventory: WarehouseDetailsFragment['inventories'][0]
+  inventory: MyWarehousesQuery['myWarehouses'][0]['inventories'][0]
   warehouseId: number
 }) => {
   return (
     <div className="flex overflow-hidden border border-white rounded-lg shadow-lg">
       <Image
-        src={inventory.product.image || '/empty-product.jpeg'}
+        src={inventory.product.image || '/no-image.jpeg'}
         width={200}
         height={200}
         className="object-cover w-36 h-36 "

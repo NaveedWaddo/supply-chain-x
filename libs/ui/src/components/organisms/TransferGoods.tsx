@@ -22,22 +22,12 @@ export const TransferGoods = ({
   warehouseId: number
   inventory: WarehouseDetailsFragment['inventories'][0]
 }) => {
-  const {
-    register,
-    handleSubmit,
-    reset,
-    watch,
-    formState: { errors },
-  } = useFormTransferInventory()
-  const [open, setOpen] = useState(false)
-
-  const data = watch()
-  console.log('data , errors', data, errors)
+  const { register, handleSubmit, reset } = useFormTransferInventory()
+  const [close, setClose] = useState(false)
 
   return (
     <SimpleDialog
-      open={open}
-      setOpen={setOpen}
+      close={close}
       buttonText={
         <div className=" hover:underline underline-offset-4">Transfer</div>
       }
@@ -45,7 +35,6 @@ export const TransferGoods = ({
       <div>{inventory.product.name}</div>
       <div>{inventory.quantity}</div>
       <form
-        className="flex flex-col gap-2"
         onSubmit={handleSubmit(
           async ({ productId, quantity, fromWarehouseId, toWarehouseId }) => {
             const { data, error } = await fetchGraphQLClient({
@@ -65,36 +54,30 @@ export const TransferGoods = ({
               alert('Transfer failed.')
             }
 
-            setOpen(false)
+            setClose(true)
             reset()
           },
         )}
       >
-        <Label
-          title="Warehouse ID (readonly)"
-          error={errors.fromWarehouseId?.message}
-        >
+        <Label title="Quantity">
+          <Input {...register('quantity', { valueAsNumber: true })} />
+        </Label>
+        <Label title="Warehouse ID (readonly)">
           <Input
             {...register('fromWarehouseId', { valueAsNumber: true })}
             readOnly
             value={warehouseId}
           />
         </Label>
-        <Label title="Product ID (readonly)" error={errors.productId?.message}>
+        <Label title="Product ID (readonly)">
           <Input
             {...register('productId', { valueAsNumber: true })}
             readOnly
             value={inventory.product.id}
           />
         </Label>
-        <Label
-          title="Target Warehouse ID"
-          error={errors.toWarehouseId?.message}
-        >
+        <Label title="Target Warehouse ID">
           <Input {...register('toWarehouseId', { valueAsNumber: true })} />
-        </Label>
-        <Label title="Quantity" error={errors.quantity?.message}>
-          <Input {...register('quantity', { valueAsNumber: true })} />
         </Label>
         <Button type="submit">Submit</Button>
       </form>

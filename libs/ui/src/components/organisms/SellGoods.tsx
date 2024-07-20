@@ -22,12 +22,11 @@ export const SellGoods = ({
   inventory: MyWarehousesQuery['myWarehouses'][0]['inventories'][0]
 }) => {
   const { register, handleSubmit, reset } = useFormSellInventory()
-  const [open, setOpen] = useState(false)
+  const [close, setClose] = useState(false)
 
   return (
     <SimpleDialog
-      open={open}
-      setOpen={setOpen}
+      close={close}
       buttonText={
         <div className=" hover:underline underline-offset-4">Sell</div>
       }
@@ -35,7 +34,6 @@ export const SellGoods = ({
       <div>{inventory.product.name}</div>
       <div>{inventory.quantity}</div>
       <form
-        className="flex flex-col gap-2"
         onSubmit={handleSubmit(async ({ productId, quantity, warehouseId }) => {
           const { data, error } = await fetchGraphQLClient({
             document: ReduceInventoryDocument,
@@ -53,7 +51,7 @@ export const SellGoods = ({
             alert('Selling products failed.')
           }
 
-          setOpen(false)
+          setClose(true)
           reset()
         })}
       >

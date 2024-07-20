@@ -1,14 +1,13 @@
-import { WarehouseDetailsFragment } from '@foundation/network/src/queries/generated'
+import { MyWarehousesQuery } from '@foundation/network/src/queries/generated'
 
 import { format } from 'date-fns'
-
-import { StaticMapSimple } from '../molecules/StaticMap'
 import { MapLink } from '../molecules/MapLink'
+import { StaticMapSimple } from '../molecules/StaticMap'
 
 export const WarehouseCard = ({
   warehouse,
 }: {
-  warehouse: WarehouseDetailsFragment
+  warehouse: MyWarehousesQuery['myWarehouses'][0]
 }) => {
   return (
     <div className="flex flex-col gap-2">

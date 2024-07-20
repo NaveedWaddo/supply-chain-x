@@ -1,4 +1,4 @@
-import { WarehouseDetailsFragment } from '@foundation/network/src/queries/generated'
+import { MyWarehousesQuery } from '@foundation/network/src/queries/generated'
 
 import { format } from 'date-fns'
 import { MapLink } from '../molecules/MapLink'
@@ -7,7 +7,7 @@ import { StaticMapSimple } from '../molecules/StaticMap'
 export const WarehouseDetails = ({
   warehouse,
 }: {
-  warehouse: WarehouseDetailsFragment
+  warehouse: MyWarehousesQuery['myWarehouses'][0]
 }) => {
   return (
     <div className="flex justify-between gap-2">
@@ -24,20 +24,18 @@ export const WarehouseDetails = ({
           {format(new Date(warehouse.createdAt), 'PP')}
         </div>
       </div>{' '}
-      <div className="flex-shrink-0">
-        <MapLink
-          lat={warehouse.location?.latitude}
-          lng={warehouse.location?.longitude}
-        >
-          <StaticMapSimple
-            position={{
-              lat: warehouse.location?.latitude,
-              lng: warehouse.location?.longitude,
-            }}
-            className="border-2 border-white rounded-lg shadow-lg w-36 h-36"
-          />
-        </MapLink>
-      </div>
+      <MapLink
+        lat={warehouse.location?.latitude}
+        lng={warehouse.location?.longitude}
+      >
+        <StaticMapSimple
+          position={{
+            lat: warehouse.location?.latitude,
+            lng: warehouse.location?.longitude,
+          }}
+          className="border-2 border-white rounded-lg shadow-lg w-36 h-36"
+        />
+      </MapLink>
     </div>
   )
 }

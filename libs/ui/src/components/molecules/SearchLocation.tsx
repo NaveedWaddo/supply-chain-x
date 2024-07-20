@@ -1,9 +1,12 @@
-import React from 'react'
-import { ViewState } from './Map'
+'use client'
+
+import { Loader } from 'lucide-react'
+import * as React from 'react'
+
 import { useSearchLocation } from '@foundation/util/hooks'
 import { useMap } from 'react-map-gl'
-import { Input } from '../../atoms/input'
-import { Loader } from 'lucide-react'
+import { Input } from '../atoms/input'
+import { ViewState } from '../organisms/Map/Map'
 
 export function SearchLocation({
   onLocationChange,
@@ -20,6 +23,7 @@ export function SearchLocation({
   }, [setSearchText, value])
 
   const { current: map } = useMap()
+
   return (
     <div className="relative">
       <Input
@@ -33,7 +37,7 @@ export function SearchLocation({
       />
       {open ? (
         <div className="">
-          {loading && <Loader className="animate-spin" />}
+          {loading && <Loader />}
           <div className="absolute z-10 mt-0.5 overflow-hidden rounded-lg top-full">
             {locationInfo.map((place) => (
               <button

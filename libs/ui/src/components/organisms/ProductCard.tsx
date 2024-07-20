@@ -1,6 +1,5 @@
 import { MyProductsQuery } from '@foundation/network/src/queries/generated'
 import { format } from 'date-fns'
-import Image from 'next/image'
 
 export const ProductCard = ({
   product,
@@ -11,14 +10,13 @@ export const ProductCard = ({
 
   return (
     <div className="gap-4 mb-4 overflow-hidden border border-white rounded-lg shadow-xl">
-      <Image
-        src={image || '/no-image.jpeg'}
-        alt={name}
-        height={500}
-        width={500}
-        className="object-cover w-full aspect-square"
-      />
-
+      {image && (
+        <img
+          src={image}
+          alt={name}
+          className="object-cover w-full aspect-square"
+        />
+      )}
       <div className="flex flex-col justify-between p-4 bg-white/20">
         <div>
           <h3 className="text-lg font-semibold">{name}</h3>

@@ -1,14 +1,72 @@
 'use client'
+
+import { Map as WorldMap } from './Map/Map'
+import { initialBoundsArray, Location } from '@foundation/util/index'
 import { ProductQuery } from '@foundation/network/src/queries/generated'
-import { Title2 } from '../atoms/typography'
-import { Panel } from './Map/Panel'
-import { DefaultZoomControls } from './Map/ZoomControls'
 import { Marker } from './Map/MapMarker'
-import { Map as ReactMap } from './Map/Map'
+
+import { Panel } from './Map/Panel'
 import { Factory, LucideIcon, Store, Warehouse } from 'lucide-react'
+import { MapLine } from './Map/MapLine'
+import { Title2 } from '../atoms/typography'
 import { LngLatLike } from 'react-map-gl'
-import { initialBoundsArray, Location } from '@foundation/util'
-import { MapLine } from './MapLine'
+import { DefaultZoomControls } from './Map/ZoomControls'
+
+type Transactions = ProductQuery['product']['transactions']
+const aggregateTransactions = (transactions?: Transactions): Transactions => {
+  const transactionsMap = new Map<string, Transactions[number]>()
+
+  transactions?.forEach((transaction) => {
+    if (!transaction.fromWarehouse || !transaction.toWarehouse) {
+      return // Skip transactions without from or to warehouses
+    }
+
+    const key = `${transaction.fromWarehouse.id},${transaction.toWarehouse.id}`
+
+    if (transactionsMap.has(key)) {
+      const existingTransaction = transactionsMap.get(key)
+      if (existingTransaction) {
+        existingTransaction.quantity += transaction.quantity
+      }
+    } else {
+      transactionsMap.set(key, { ...transaction })
+    }
+  })
+
+  return Array.from(transactionsMap.values())
+}
+
+// const findCenterLocation = (
+//   transactions: ProductQuery['product']['transactions'],
+// ): Location => {
+//   if (transactions.length === 0) {
+//     return initialViewState
+//   }
+
+//   let totalLatitude = 0
+//   let totalLongitude = 0
+//   let count = 0
+
+//   transactions.forEach((transaction) => {
+//     if (transaction.toWarehouse?.location) {
+//       totalLatitude += transaction.toWarehouse.location.latitude
+//       totalLongitude += transaction.toWarehouse.location.longitude
+//       count++
+//     }
+//     if (transaction.fromWarehouse?.location) {
+//       totalLatitude += transaction.fromWarehouse.location.latitude
+//       totalLongitude += transaction.fromWarehouse.location.longitude
+//       count++
+//     }
+//   })
+
+//   return {
+//     latitude: totalLatitude / count,
+//     longitude: totalLongitude / count,
+//   }
+// }
+
+const OFFSET_RATIO = 0.1 // 10% offset
 
 const calculateBounds = (
   transactions: ProductQuery['product']['transactions'],
@@ -49,8 +107,6 @@ const calculateBounds = (
   const latDiff = maxLat - minLat
   const lngDiff = maxLng - minLng
 
-  const OFFSET_RATIO = 0.1
-
   // Apply offset based on distance
   minLat -= latDiff * OFFSET_RATIO
   maxLat += latDiff * OFFSET_RATIO
@@ -63,31 +119,6 @@ const calculateBounds = (
   ]
 }
 
-type Transactions = ProductQuery['product']['transactions']
-
-const aggregateTransactions = (transactions?: Transactions): Transactions => {
-  const transactionsMap = new Map<string, Transactions[number]>()
-
-  transactions?.forEach((transaction) => {
-    if (!transaction.fromWarehouse || !transaction.toWarehouse) {
-      return // Skip transactions without from or to warehouses
-    }
-
-    const key = `${transaction.fromWarehouse.id},${transaction.toWarehouse.id}`
-
-    const existingTransaction = transactionsMap.get(key)
-    if (existingTransaction) {
-      existingTransaction.quantity += transaction.quantity
-    } else {
-      transactionsMap.set(key, { ...transaction })
-    }
-  })
-
-  console.log('transactionsMap ', transactionsMap)
-
-  return Array.from(transactionsMap.values())
-}
-
 export const ProductFlow = ({
   product,
 }: {
@@ -96,36 +127,34 @@ export const ProductFlow = ({
   return (
     <div>
       <Title2>Product flow</Title2>
-      <ReactMap
+      <WorldMap
         initialViewState={{
           bounds: calculateBounds(product?.transactions || []),
         }}
       >
-        <Panel>
+        <Panel position="right-center">
           <DefaultZoomControls />
-          {product?.inventories.map((inventory) => (
-            <Marker
-              anchor="bottom"
-              offset={[0, -6]}
-              key={inventory.id}
-              longitude={inventory.warehouse.location?.longitude || 0}
-              latitude={inventory.warehouse.location?.latitude || 0}
-            >
-              {inventory.warehouse.manufacturer ? (
-                <StyledIcon Icon={Factory} />
-              ) : null}
-              {inventory.warehouse.distributor ? (
-                <StyledIcon Icon={Warehouse} />
-              ) : null}
-              {inventory.warehouse.retailer ? (
-                <StyledIcon Icon={Store} />
-              ) : null}
-              <div className="absolute p-1 font-semibold translate-y-1/3 -translate-x-1/3 bottom-full left-full">
-                {inventory.quantity}
-              </div>
-            </Marker>
-          ))}
         </Panel>
+        {product?.inventories.map((inventory) => (
+          <Marker
+            anchor="bottom"
+            offset={[0, -6]}
+            key={inventory.id}
+            longitude={inventory.warehouse.location?.longitude || 0}
+            latitude={inventory.warehouse.location?.latitude || 0}
+          >
+            {inventory.warehouse.manufacturer ? (
+              <StyledIcon Icon={Factory} />
+            ) : null}
+            {inventory.warehouse.distributor ? (
+              <StyledIcon Icon={Warehouse} />
+            ) : null}
+            {inventory.warehouse.retailer ? <StyledIcon Icon={Store} /> : null}
+            <div className="absolute p-1 font-semibold translate-y-1/3 -translate-x-1/3 bottom-full left-full">
+              {inventory.quantity}
+            </div>
+          </Marker>
+        ))}
         {aggregateTransactions(product?.transactions).map((transaction) => (
           <MapLine
             key={transaction.id}
@@ -136,7 +165,7 @@ export const ProductFlow = ({
             {transaction.quantity}
           </MapLine>
         ))}
-      </ReactMap>
+      </WorldMap>
     </div>
   )
 }

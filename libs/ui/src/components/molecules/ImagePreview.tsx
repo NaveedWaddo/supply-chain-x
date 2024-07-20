@@ -1,10 +1,11 @@
 import { Trash } from 'lucide-react'
+import { ReactNode } from 'react'
 import Image from 'next/image'
-import { BaseComponent } from '@foundation/util/types'
 
-export interface IImageUploadProps extends BaseComponent {
+export interface IImageUploadProps {
   src?: Blob | MediaSource
   clearImage: () => void
+  children: ReactNode
 }
 
 export const ImagePreview = ({
@@ -29,7 +30,7 @@ export const ImagePreview = ({
     )
   }
   return (
-    <div className="flex items-center justify-center w-full h-full bg-gray-200">
+    <div className="flex items-center justify-center w-full h-full bg-gray-100">
       {children}
     </div>
   )

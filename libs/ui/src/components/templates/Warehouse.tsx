@@ -1,23 +1,26 @@
-import { WarehouseDetailsFragment } from '@foundation/network/src/queries/generated'
-import { WarehouseDetails } from '../organisms/WarehouseDetails'
-import { Title2 } from '../atoms/typography'
-import { InventoryCard } from '../organisms/InventoryCard'
+import { MyWarehousesQuery } from '@foundation/network/src/queries/generated'
+
 import { UpsertInventory } from '../organisms/UpsertInventory'
 import { TransactionsTable } from '../organisms/TransactionsTable'
+import { InventoryCard } from '../organisms/InventoryCard'
+import { WarehouseDetails } from '../organisms/WarehouseDetails'
+
+type WarehouseProps = {
+  warehouse: MyWarehousesQuery['myWarehouses'][0]
+  showUpsertInventory?: boolean
+}
 
 export const Warehouse = ({
   warehouse,
-  showUpsertInventory,
-}: {
-  warehouse: WarehouseDetailsFragment
-  showUpsertInventory?: boolean
-}) => {
+  showUpsertInventory = false,
+}: WarehouseProps) => {
   return (
-    <div className="space-y-6">
+    <div className="space-y-8">
       <WarehouseDetails warehouse={warehouse} />
+
       <div>
-        <div className="flex items-center gap-2 mb-2">
-          <Title2 className="mb-0">Inventory</Title2>
+        <div className="flex items-center gap-2 mt-4 mb-2 ">
+          <div className="font-semibold">Inventory</div>
           {showUpsertInventory ? (
             <UpsertInventory warehouse={warehouse} />
           ) : null}
@@ -35,13 +38,13 @@ export const Warehouse = ({
       </div>
       {warehouse.ins.length ? (
         <div>
-          <Title2>Ins</Title2>
+          <div>Ins</div>
           <TransactionsTable transactions={warehouse.ins} />
         </div>
       ) : null}
       {warehouse.outs.length ? (
         <div>
-          <Title2>Outs</Title2>
+          <div>Outs</div>
           <TransactionsTable transactions={warehouse.outs} />
         </div>
       ) : null}
